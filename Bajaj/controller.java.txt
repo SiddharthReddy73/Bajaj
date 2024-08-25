@@ -1,0 +1,150 @@
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+public class BfhlController {
+
+    @Value("${user.id}")
+    private String userId;
+
+    @Value("${email}")
+    private String email;
+
+    @Value("${roll.number}")
+    private String rollNumber;
+
+    @PostMapping("/bfhl")
+    public ResponseEntity<BfhlResponse> processBfhlRequest(@RequestBody BfhlRequest request) {
+        BfhlResponse response = new BfhlResponse();
+        response.setIsSuccess(true);
+        response.setUserId(userId);
+        response.setEmail(email);
+        response.setRollNumber(rollNumber);
+
+        List<String> numbers = new ArrayList<>();
+        List<String> alphabets = new ArrayList<>();
+        String highestLowercaseAlphabet = "";
+
+        for (String data : request.getData()) {
+            if (data.matches("\\d+")) {
+                numbers.add(data);
+            } else if (data.matches("[a-zA-Z]")) {
+                alphabets.add(data);
+                if (data.toLowerCase().compareTo(highestLowercaseAlphabet) > 0) {
+                    highestLowercaseAlphabet = data.toLowerCase();
+                }
+            }
+        }
+
+        response.setNumbers(numbers);
+        response.setAlphabets(alphabets);
+        response.setHighestLowercaseAlphabet(highestLowercaseAlphabet);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/bfhl")
+    public ResponseEntity<OperationCodeResponse> getOperationCode() {
+        OperationCodeResponse response = new OperationCodeResponse();
+        response.setOperationCode(1);
+        return ResponseEntity.ok(response);
+    }
+}
+
+class BfhlRequest {
+    private List<String> data;
+
+    public List<String> getData() {
+        return data;
+    }
+
+    public void setData(List<String> data) {
+        this.data = data;
+    }
+}
+
+class BfhlResponse {
+    private boolean isSuccess;
+    private String userId;
+    private String email;
+    private String rollNumber;
+    private List<String> numbers;
+    private List<String> alphabets;
+    private String highestLowercaseAlphabet;
+
+    public boolean getIsSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
+    }
+
+    public List<String> getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(List<String> numbers) {
+        this.numbers = numbers;
+    }
+
+    public List<String> getAlphabets() {
+        return alphabets;
+    }
+
+    public void setAlphabets(List<String> alphabets) {
+        this.alphabets = alphabets;
+    }
+
+    public String getHighestLowercaseAlphabet() {
+        return highestLowercaseAlphabet;
+    }
+
+    public void setHighestLowercaseAlphabet(String highestLowercaseAlphabet) {
+        this.highestLowercaseAlphabet = highestLowercaseAlphabet;
+    }
+}
+
+class OperationCodeResponse {
+    private int operationCode;
+
+    public int getOperationCode() {
+        return operationCode;
+    }
+
+    public void setOperationCode(int operationCode) {
+        this.operationCode = operationCode;
+    }
+}

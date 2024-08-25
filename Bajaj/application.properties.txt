@@ -1,0 +1,3 @@
+user.id=Siddharth_reddy_03-2004
+email=siddharthredy0310@gmail.com
+roll.number=21BCE5356
